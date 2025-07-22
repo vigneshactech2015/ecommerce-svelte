@@ -4,12 +4,11 @@
 	import logout from '$lib/images/logout.svg';
 	import './header.css';
 
-	// Authentication state - you can replace this with actual auth logic later
 	let isAuthenticated = false;
 
 	function handleLogout() {
 		isAuthenticated = false;
-		// Add logout logic here
+		localStorage.clear();
 	}
 
 </script>

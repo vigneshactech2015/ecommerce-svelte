@@ -34,8 +34,8 @@
 			
 			if (data?.token) {
 				successMessage = 'Login successful! Redirecting...';
-				
-                alert('login success')
+				localStorage.setItem('token',data?.token)
+				goto("/products")
 			} else {
 				errorMessage = data?.message;
 			}
