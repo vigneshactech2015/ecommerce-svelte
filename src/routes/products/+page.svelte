@@ -1,6 +1,7 @@
 <script>
     import { PRODUCTS_ENDPOINT } from "$lib/utils/endpoint";
     import { onMount } from "svelte";
+    import { goto } from '$app/navigation';
     import './product.css';
 
     // State variables
@@ -110,6 +111,11 @@
         const endIndex = startIndex + itemsPerPage;
         displayedProducts = filteredProducts.slice(startIndex, endIndex);
         
+    };
+
+    // Handle product card navigation
+    const navigateToProduct = (product) => {
+        goto(`/products/${product.id || product._id}`);
     };
 
     // Handle sort order toggle
@@ -232,7 +238,14 @@
         {:else}
             <div class="products-grid">
                 {#each displayedProducts as product}
-                    <div class="product-card">
+                    <div 
+                        class="product-card" 
+                        on:click={() => navigateToProduct(product)}
+                        on:keydown={(event) => {}}
+                        role="button" 
+                        tabindex="0"
+                        aria-label="View details for {product.name}"
+                    >
                         <div class="product-image">
                             {#if product.image}
                                 <img src={product.image} alt={product.name} />
@@ -267,6 +280,11 @@
                             <button 
                                 class="add-to-cart-btn {product.stock <= 0 ? 'disabled' : ''}"
                                 disabled={product.stock <= 0}
+                                on:click|stopPropagation={() => {
+                                    // Handle add to cart without navigating
+                                    alert(`Added ${product.name} to cart!`);
+                                }}
+                                aria-label="Add {product.name} to cart"
                             >
                                 {product.stock > 0 ? 'Add to Cart' : 'Unavailable'}
                             </button>
