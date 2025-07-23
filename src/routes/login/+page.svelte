@@ -2,6 +2,7 @@
 	import './login.css';
 	import { goto } from '$app/navigation';
     import {LOGIN_ENDPOINT} from '../../lib/utils/endpoint';
+	import { userStore } from '$lib/stores/index.js';
 
 	let username = '';
 	let password = '';
@@ -34,7 +35,18 @@
 			
 			if (data?.token) {
 				successMessage = 'Login successful! Redirecting...';
-				localStorage.setItem('token',data?.token)
+				
+				// Store token
+				localStorage.setItem('token', data.token);
+				
+				// Store user information in store and localStorage
+				const userInfo = {
+					username: username,
+					userId: username, // Set userId to be the same as username
+					token: data.token
+				};
+				userStore.set(userInfo);
+				
 				goto("/products")
 			} else {
 				errorMessage = data?.message;

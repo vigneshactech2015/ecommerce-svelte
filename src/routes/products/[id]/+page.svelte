@@ -3,6 +3,8 @@
     import { goto } from '$app/navigation';
     import { onMount } from 'svelte';
     import { PRODUCT_DETAIL_ENDPOINT } from '$lib/utils/endpoint.js';
+    import { userStore } from '$lib/stores/index.js';
+    import { addToCart } from '$lib/services/cartService.js';
     import './productDetails.css';
 
     // Get the product ID from the URL
@@ -14,6 +16,13 @@
     let error = null;
     let quantity = 1;
     let selectedImageIndex = 0;
+    let user = null;
+    let addingToCart = false;
+
+    // Subscribe to user store
+    userStore.subscribe(value => {
+        user = value;
+    });
 
     // Fetch product details
     const getProductDetails = async () => {
@@ -38,12 +47,10 @@
         }
     };
 
-    // Handle back navigation
     const goBack = () => {
         goto('/products');
     };
 
-    // Handle quantity change
     const updateQuantity = (change) => {
         const newQuantity = quantity + change;
         if (newQuantity >= 1 && newQuantity <= (product?.stock || 1)) {
@@ -51,13 +58,27 @@
         }
     };
 
-    // Handle add to cart
-    const addToCart = () => {
-        // TODO: Implement cart functionality
-        alert(`Added ${quantity} x ${product.name} to cart!`);
+    const handleAddToCart = async () => {
+        if (!user?.userId) {
+            goto('/login');
+            return;
+        }
+
+        addingToCart = true;
+
+        try {
+            const result = await addToCart(user.userId, productId, quantity);
+            
+            if (result.success) {
+                // Reset quantity to 1 after successful addition
+                quantity = 1;
+            }
+        } catch (error) {
+        } finally {
+            addingToCart = false;
+        }
     };
 
-    // Handle image selection
     const selectImage = (index) => {
         selectedImageIndex = index;
     };
@@ -187,8 +208,37 @@
                 <!-- Quantity and Add to Cart -->
                 {#if product.stock > 0}
                     <div class="purchase-section">
-                        <button class="add-to-cart-btn" on:click={addToCart}>
-                            Add to Cart - ${(product.price * quantity).toFixed(2)}
+                        <div class="quantity-section">
+                            <label for="quantity">Quantity:</label>
+                            <div class="quantity-controls">
+                                <button 
+                                    class="quantity-btn" 
+                                    on:click={() => updateQuantity(-1)}
+                                    disabled={quantity <= 1}
+                                >
+                                    −
+                                </button>
+                                <span class="quantity-display">{quantity}</span>
+                                <button 
+                                    class="quantity-btn" 
+                                    on:click={() => updateQuantity(1)}
+                                    disabled={quantity >= product.stock}
+                                >
+                                    +
+                                </button>
+                            </div>
+                        </div>
+
+                        <button 
+                            class="add-to-cart-btn {addingToCart ? 'loading' : ''}" 
+                            on:click={handleAddToCart}
+                            disabled={addingToCart}
+                        >
+                            {#if addingToCart}
+                                Adding to Cart...
+                            {:else}
+                                Add to Cart - ${(product.price * quantity).toFixed(2)}
+                            {/if}
                         </button>
                     </div>
                 {:else}

@@ -1,16 +1,46 @@
 <script>
 	import { page } from '$app/state';
+	import { goto } from '$app/navigation';
+	import { onMount } from 'svelte';
 	import logo from '$lib/images/svelte-logo.svg';
 	import logout from '$lib/images/logout.svg';
+	import cart from '$lib/images/cart.svg';
+	import { userStore, cartStore } from '$lib/stores/index.js';
+	import { getCart, clearCart } from '$lib/services/cartService.js';
 	import './header.css';
 
-	let isAuthenticated = false;
+	let user = null;
+	let cartData = { totalItems: 0 };
+
+	// Subscribe to stores
+	userStore.subscribe(value => {
+		user = value;
+		// Load cart when user changes
+		if (value?.userId) {
+			getCart(value.userId);
+		} else {
+			clearCart();
+		}
+	});
+
+	cartStore.subscribe(value => {
+		cartData = value;
+	});
 
 	function handleLogout() {
-		isAuthenticated = false;
-		localStorage.clear();
+		userStore.logout();
+		clearCart();
+		goto('/login');
 	}
 
+	function handleCartClick() {
+		goto('/cart');
+	}
+
+	onMount(() => {
+		// Initialize user store from localStorage
+		userStore.init();
+	});
 </script>
 
 <header>
@@ -29,9 +59,17 @@
 				<a href="/products">Products</a>
 			</li>
 
-			<li aria-current={page.url.pathname === '/cart' ? 'page' : undefined}>
-				<a href="/cart">Cart</a>
-			</li>
+			{#if user}
+				<li aria-current={page.url.pathname === '/cart' ? 'page' : undefined}>
+					<button class="cart-btn" on:click={handleCartClick}>
+						<img src={cart} alt="cart" />
+						{#if cartData.totalItems > 0}
+							<span class="cart-count">{cartData.totalItems}</span>
+						{/if}
+						<span class="cart-text">Cart</span>
+					</button>
+				</li>
+			{/if}
 			
 		</ul>
 		<svg viewBox="0 0 2 3" aria-hidden="true">
@@ -40,10 +78,13 @@
 	</nav>
 
 	<div class="corner">
-		{#if isAuthenticated}
-			<button on:click={handleLogout} class="logout-btn">
-				<img src={logout} alt="logout"/>
-			</button>
+		{#if user}
+			<div class="user-section">
+				<span class="username">Hi, {user.username}</span>
+				<button on:click={handleLogout} class="logout-btn">
+					<img src={logout} alt="logout"/>
+				</button>
+			</div>
 		{:else}
 			<a href="/login">
 				<img src={logout} alt="login"/>

@@ -2,6 +2,8 @@
     import { PRODUCTS_ENDPOINT } from "$lib/utils/endpoint";
     import { onMount } from "svelte";
     import { goto } from '$app/navigation';
+    import { userStore } from '$lib/stores/index.js';
+    import { addToCart } from '$lib/services/cartService.js';
     import './product.css';
 
     // State variables
@@ -10,6 +12,8 @@
     let displayedProducts = [];
     let loading = true;
     let error = null;
+    let user = null;
+    let addingToCart = {};
     
     // Pagination state
     let currentPage = 1;
@@ -28,6 +32,11 @@
         { value: "category", label: "Category" },
         { value: "stock", label: "Stock" }
     ];
+
+    // Subscribe to user store
+    userStore.subscribe(value => {
+        user = value;
+    });
 
     const getProducts = async () => {
         try {
@@ -113,18 +122,36 @@
         
     };
 
-    // Handle product card navigation
+    const handleAddToCart = async (product, event) => {
+        // Prevent navigation to product detail
+        event.stopPropagation(); 
+        
+        if (!user?.userId) {
+            goto('/login');
+            return;
+        }
+
+        const productId = product.id || product._id;
+        addingToCart[productId] = true;
+
+        try {
+            const result = await addToCart(user.userId, productId, 1);
+        } catch (error) {
+            
+        } finally {
+            addingToCart[productId] = false;
+        }
+    };
+
     const navigateToProduct = (product) => {
         goto(`/products/${product.id || product._id}`);
     };
 
-    // Handle sort order toggle
     const toggleSortOrder = () => {
         sortOrder = sortOrder === 'asc' ? 'desc' : 'asc';
         filterAndSortProducts();
     };
 
-    // Handle page change
     const goToPage = (page) => {
         if (page >= 1 && page <= totalPages) {
             currentPage = page;
@@ -278,15 +305,18 @@
                             </div>
                             
                             <button 
-                                class="add-to-cart-btn {product.stock <= 0 ? 'disabled' : ''}"
-                                disabled={product.stock <= 0}
-                                on:click|stopPropagation={() => {
-                                    // Handle add to cart without navigating
-                                    alert(`Added ${product.name} to cart!`);
-                                }}
+                                class="add-to-cart-btn {product.stock <= 0 ? 'disabled' : ''} {addingToCart[product.id || product._id] ? 'loading' : ''}"
+                                disabled={product.stock <= 0 || addingToCart[product.id || product._id]}
+                                on:click={(event) => handleAddToCart(product, event)}
                                 aria-label="Add {product.name} to cart"
                             >
-                                {product.stock > 0 ? 'Add to Cart' : 'Unavailable'}
+                                {#if addingToCart[product.id || product._id]}
+                                    Adding...
+                                {:else if product.stock > 0}
+                                    Add to Cart
+                                {:else}
+                                    Unavailable
+                                {/if}
                             </button>
                         </div>
                     </div>
