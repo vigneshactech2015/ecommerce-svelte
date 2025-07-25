@@ -2,6 +2,7 @@
 	import { onMount } from 'svelte';
 	import { userStore, cartStore } from '$lib/stores/index.js';
 	import { getCart, clearCart, removeCartItem } from '$lib/services/cartService.js';
+	import { PLACE_ORDER_ENDPOINT } from '$lib/utils/endpoint.js';
 	import { goto } from '$app/navigation';
     import './cart.css';
 
@@ -73,18 +74,40 @@
 		try {
 			processingPayment = true;
 			
-			// Simulate payment processing
-			await new Promise(resolve => setTimeout(resolve, 2000));
-			
-			// Clear cart after successful payment
-			await handleClearCart();
-			
-			// Show success message (in a real app, you'd redirect to a success page)
-			alert('Payment successful! Thank you for your purchase.');
+			// Prepare order payload
+			const orderPayload = {
+				userId: user.userId,
+				items: cart.items.map(item => ({
+					productId: item.id,
+					quantity: item.quantity
+				}))
+			};
+
+			// Call order placement API
+			const response = await fetch(PLACE_ORDER_ENDPOINT, {
+				method: 'POST',
+				headers: {
+					'Content-Type': 'application/json',
+				},
+				body: JSON.stringify(orderPayload)
+			});
+
+			const data = await response.json();
+
+			if (data.success) {
+				// Clear cart after successful order placement
+				await handleClearCart();
+				
+				// Show success message
+				alert('Payment successful! Thank you for your purchase.');
+			} else {
+				// Show error message from API
+				alert(data.message || 'Payment failed. Please try again.');
+			}
 			
 		} catch (err) {
 			console.error('Error processing payment:', err);
-			error = 'Payment failed. Please try again.';
+			alert('Payment failed. Please try again.');
 		} finally {
 			processingPayment = false;
 		}

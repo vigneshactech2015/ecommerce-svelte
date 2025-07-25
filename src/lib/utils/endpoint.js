@@ -6,3 +6,4 @@ export const ADD_TO_CART_ENDPOINT = `${BASEURL}/cart-service/cart/add`;
 export const GET_CART_ENDPOINT = (userId) => `${BASEURL}/cart-service/cart/${userId}`;
 export const REMOVE_CART_ITEM_ENDPOINT = `${BASEURL}/cart-service/cart/remove`;
 export const CLEAR_CART_ENDPOINT = (userId) => `${BASEURL}/cart-service/cart/${userId}`;
+export const PLACE_ORDER_ENDPOINT = `${BASEURL}/order-service/order/place`;
