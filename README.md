@@ -1,38 +1,263 @@
-# sv
+# 🛒 E-Commerce SvelteKit Application
 
-Everything you need to build a Svelte project, powered by [`sv`](https://github.com/sveltejs/cli).
+A modern, responsive e-commerce application built with **SvelteKit** frontend and **Docker-based microservices** backend architecture.
 
-## Creating a project
+![Application Demo](./demo.mp4)
 
-If you're seeing this, you've probably already done this step. Congrats!
+## 🚀 Features
 
+### 🔐 **Authentication System**
+- Secure user login/logout
+- Token-based authentication
+- Route protection (public/private routes)
+- Automatic redirects based on auth status
+
+### 🛍️ **Product Catalog**
+- **Responsive Product Grid** - Optimized for all devices
+- **Smart Search** - Search by product name or category
+- **Intelligent Sorting** - Sort by name, price, category, stock
+- **Client-Side Pagination** - 6 products per page with smooth navigation
+- **Product Details** - Dedicated detail pages with full product information
+- **Stock Management** - Real-time stock status display
+
+### 🛒 **Shopping Cart**
+- **Add to Cart** - From both product list and detail pages
+- **Cart Management** - View, remove items, clear entire cart
+- **Real-time Updates** - Instant cart count updates in header
+- **Responsive Design** - Optimized cart experience across devices
+- **Order Processing** - Seamless checkout with order placement
+
+### 📱 **Responsive Design**
+- **Mobile-First** approach
+- **Touch-Friendly** interactions
+- **Adaptive Layouts** that work on all screen sizes
+- **Optimized Performance** across devices
+
+## 🖼️ Application Screenshots
+
+### 🔑 Login Page
+Beautiful gradient login form with secure authentication
+![Login Page](./screenshots/login.png)
+
+### 📦 Products Catalog
+Feature-rich product browsing with search, sort, and pagination
+![Products Page](./screenshots/products.png)
+
+### 🔍 Product Details
+Comprehensive product information with add to cart functionality
+![Product Details](./screenshots/product-details.png)
+
+### 🛒 Shopping Cart
+Clean cart interface with order summary and checkout
+![Cart Page](./screenshots/cart.png)
+
+## 🏗️ Architecture
+
+### **Frontend (SvelteKit)**
+- **Framework**: SvelteKit with SSR support
+- **Styling**: Modern CSS with responsive design
+- **State Management**: Svelte stores with localStorage persistence
+- **Routing**: File-based routing with dynamic routes
+- **API Integration**: RESTful API consumption
+
+### **Backend (Microservices)**
+- **API Gateway**: Central routing and load balancing
+- **Auth Service**: User authentication and authorization
+- **Product Service**: Product catalog management
+- **Cart Service**: Shopping cart operations
+- **Order Service**: Order processing and management
+- **Service Discovery**: Consul for service registration
+- **Message Queue**: RabbitMQ for async communication
+
+## 🚀 Getting Started
+
+### Prerequisites
+- **Node.js** (v18 or higher)
+- **Docker** and **Docker Compose**
+- **Git**
+
+### 📦 Installation
+
+#### 1. Clone the Repository
 ```bash
-# create a new project in the current directory
-npx sv create
-
-# create a new project in my-app
-npx sv create my-app
+git clone <repository-url>
+cd ecommerce-svelte
 ```
 
-## Developing
-
-Once you've created a project and installed dependencies with `npm install` (or `pnpm install` or `yarn`), start a development server:
-
+#### 2. Start Backend Services
 ```bash
+# Start all microservices
+docker-compose up --build
+```
+**Backend will be available at:** `http://localhost:3000`
+
+#### 3. Start Frontend Application
+```bash
+# Install dependencies
+npm install
+
+# Start development server
 npm run dev
+```
+**Frontend will be available at:** `http://localhost:5173`
 
-# or start the server and open the app in a new browser tab
-npm run dev -- --open
+### 🔑 Login Credentials
+```
+Username: user123
+Password: password
 ```
 
-## Building
+## 🛠️ Technology Stack
 
-To create a production version of your app:
+### **Frontend**
+- ![SvelteKit](https://img.shields.io/badge/SvelteKit-FF3E00?style=flat&logo=svelte&logoColor=white)
+- ![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?style=flat&logo=javascript&logoColor=black)
+- ![CSS3](https://img.shields.io/badge/CSS3-1572B6?style=flat&logo=css3&logoColor=white)
+- ![HTML5](https://img.shields.io/badge/HTML5-E34F26?style=flat&logo=html5&logoColor=white)
 
+### **Backend**
+- ![Docker](https://img.shields.io/badge/Docker-2496ED?style=flat&logo=docker&logoColor=white)
+- ![Node.js](https://img.shields.io/badge/Node.js-339933?style=flat&logo=node.js&logoColor=white)
+- ![Consul](https://img.shields.io/badge/Consul-F24C53?style=flat&logo=consul&logoColor=white)
+- ![RabbitMQ](https://img.shields.io/badge/RabbitMQ-FF6600?style=flat&logo=rabbitmq&logoColor=white)
+
+## 🌐 API Endpoints
+
+### **Authentication**
+- `POST /api/auth-service/auth/login` - User login
+
+### **Products**
+- `GET /api/product-service/products` - Get all products
+- `GET /api/product-service/products/:id` - Get product details
+
+### **Cart**
+- `GET /api/cart-service/cart/:userId` - Get user cart
+- `POST /api/cart-service/cart/add` - Add item to cart
+- `POST /api/cart-service/cart/remove` - Remove item from cart
+- `DELETE /api/cart-service/cart/:userId` - Clear entire cart
+
+### **Orders**
+- `POST /api/order-service/order/place` - Place order
+
+## 📁 Project Structure
+
+```
+ecommerce-svelte/
+├── src/
+│   ├── routes/                 # SvelteKit routes
+│   │   ├── +layout.svelte     # Main layout with auth
+│   │   ├── +page.svelte       # Home page (redirects)
+│   │   ├── login/             # Login page
+│   │   ├── products/          # Products listing & details
+│   │   └── cart/              # Shopping cart
+│   ├── lib/
+│   │   ├── stores/            # Svelte stores (user, cart)
+│   │   ├── services/          # API service functions
+│   │   └── utils/             # Utility functions & endpoints
+│   └── app.html               # HTML template
+├── static/                    # Static assets
+├── docker-compose.yml         # Backend services configuration
+├── package.json              # Frontend dependencies
+└── README.md                 # This file
+```
+
+## ✨ Key Features Deep Dive
+
+### 🔍 **Smart Search & Filtering**
+- **Real-time search** as you type
+- **Multi-field search** (name + category)
+- **Case-insensitive** matching
+- **Instant results** without page reload
+
+### 📄 **Advanced Pagination**
+- **Smart page numbering** (shows relevant pages)
+- **Configurable items per page** (currently 6)
+- **Previous/Next navigation**
+- **Page info display** (e.g., "Page 2 of 5")
+
+### 🛒 **Reactive Cart System**
+- **Instant updates** when items are added
+- **Live cart count** in header
+- **Persistent cart state** during session
+- **Optimistic UI updates**
+
+### 📱 **Responsive Design Highlights**
+- **Mobile-first CSS** with progressive enhancement
+- **Touch-friendly buttons** and interactions
+- **Flexible grid layouts** that adapt to screen size
+- **Optimized typography** for readability
+
+## 🎯 User Journey
+
+1. **🔑 Authentication**: User logs in with credentials
+2. **🏠 Home Redirect**: Automatically redirected to products
+3. **🔍 Product Discovery**: Browse, search, and filter products
+4. **📱 Product Details**: View detailed product information
+5. **🛒 Add to Cart**: Add desired items to shopping cart
+6. **💰 Checkout**: Review cart and place order
+7. **✅ Confirmation**: Receive order confirmation
+
+## 🔧 Development
+
+### **Available Scripts**
 ```bash
-npm run build
+npm run dev          # Start development server
+npm run build        # Build for production
+npm run preview      # Preview production build
+npm run check        # Run Svelte check
+npm run lint         # Run ESLint
 ```
 
-You can preview the production build with `npm run preview`.
+### **Docker Services**
+```bash
+docker-compose up --build    # Start all services
+docker-compose down          # Stop all services
+docker-compose logs          # View service logs
+```
 
-> To deploy your app, you may need to install an [adapter](https://svelte.dev/docs/kit/adapters) for your target environment.
+## 🚦 Service Health
+
+| Service | Port | Status | Description |
+|---------|------|--------|-------------|
+| API Gateway | 3000 | ✅ | Main API entry point |
+| Auth Service | 3001 | ✅ | Authentication |
+| Product Service | 3002 | ✅ | Product management |
+| Cart Service | 3003 | ✅ | Shopping cart |
+| Order Service | 3004 | ✅ | Order processing |
+| Notification Service | 3005 | ✅ | Notifications |
+| Inventory Service | 3006 | ✅ | Stock management |
+| Consul | 8500 | ✅ | Service discovery |
+| RabbitMQ | 5672/15672 | ✅ | Message queue |
+
+## 🎬 Demo Video
+
+A complete demonstration of the application features is available in the root directory:
+**File:** `demo.mp4`
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`)
+3. Commit your changes (`git commit -m 'Add amazing feature'`)
+4. Push to the branch (`git push origin feature/amazing-feature`)
+5. Open a Pull Request
+
+## 📝 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👨‍💻 Author
+
+**Vignesh**
+- GitHub: [@vigneshactech2015](https://github.com/vigneshactech2015)
+
+---
+
+<div align="center">
+
+**Built with ❤️ using SvelteKit and Docker**
+
+![Made with SvelteKit](https://img.shields.io/badge/Made%20with-SvelteKit-FF3E00?style=for-the-badge&logo=svelte&logoColor=white)
+![Powered by Docker](https://img.shields.io/badge/Powered%20by-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
+
+</div>
