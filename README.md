@@ -139,28 +139,6 @@ Password: password
 ### **Orders**
 - `POST /api/order-service/order/place` - Place order
 
-## 📁 Project Structure
-
-```
-ecommerce-svelte/
-├── src/
-│   ├── routes/                 # SvelteKit routes
-│   │   ├── +layout.svelte     # Main layout with auth
-│   │   ├── +page.svelte       # Home page (redirects)
-│   │   ├── login/             # Login page
-│   │   ├── products/          # Products listing & details
-│   │   └── cart/              # Shopping cart
-│   ├── lib/
-│   │   ├── stores/            # Svelte stores (user, cart)
-│   │   ├── services/          # API service functions
-│   │   └── utils/             # Utility functions & endpoints
-│   └── app.html               # HTML template
-├── static/                    # Static assets
-├── docker-compose.yml         # Backend services configuration
-├── package.json              # Frontend dependencies
-└── README.md                 # This file
-```
-
 ## ✨ Key Features Deep Dive
 
 ### 🔍 **Smart Search & Filtering**
@@ -197,16 +175,6 @@ ecommerce-svelte/
 6. **💰 Checkout**: Review cart and place order
 7. **✅ Confirmation**: Receive order confirmation
 
-## 🔧 Development
-
-### **Available Scripts**
-```bash
-npm run dev          # Start development server
-npm run build        # Build for production
-npm run preview      # Preview production build
-npm run check        # Run Svelte check
-npm run lint         # Run ESLint
-```
 
 ### **Docker Services**
 ```bash
@@ -233,14 +201,6 @@ docker-compose logs          # View service logs
 
 A complete demonstration of the application features is available in the root directory:
 **File:** `demo.mp4`
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 
 ## 👨‍💻 Author
