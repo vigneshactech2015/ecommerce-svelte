@@ -242,22 +242,9 @@ A complete demonstration of the application features is available in the root di
 4. Push to the branch (`git push origin feature/amazing-feature`)
 5. Open a Pull Request
 
-## 📝 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
 ## 👨‍💻 Author
 
 **Vignesh**
 - GitHub: [@vigneshactech2015](https://github.com/vigneshactech2015)
 
----
-
-<div align="center">
-
-**Built with ❤️ using SvelteKit and Docker**
-
-![Made with SvelteKit](https://img.shields.io/badge/Made%20with-SvelteKit-FF3E00?style=for-the-badge&logo=svelte&logoColor=white)
-![Powered by Docker](https://img.shields.io/badge/Powered%20by-Docker-2496ED?style=for-the-badge&logo=docker&logoColor=white)
-
-</div>
