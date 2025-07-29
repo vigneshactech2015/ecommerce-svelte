@@ -1,8 +1,12 @@
 # 🛒 E-Commerce SvelteKit Application
 
+
+### **Video Recording available in demo.mp4 file .**
+
 A modern, responsive e-commerce application built with **SvelteKit** frontend and **Docker-based microservices** backend architecture.
 
-![Application Demo](./demo.mp4)
+
+*Complete walkthrough: login → product browsing → cart management → checkout*
 
 ## 🚀 Features
 
@@ -80,7 +84,7 @@ Clean cart interface with order summary and checkout
 
 #### 1. Clone the Repository
 ```bash
-git clone <repository-url>
+git clone https://github.com/vigneshactech2015/ecommerce-svelte
 cd ecommerce-svelte
 ```
 
@@ -180,7 +184,6 @@ Password: password
 ```bash
 docker-compose up --build    # Start all services
 docker-compose down          # Stop all services
-docker-compose logs          # View service logs
 ```
 
 ## 🚦 Service Health
@@ -196,11 +199,6 @@ docker-compose logs          # View service logs
 | Inventory Service | 3006 | ✅ | Stock management |
 | Consul | 8500 | ✅ | Service discovery |
 | RabbitMQ | 5672/15672 | ✅ | Message queue |
-
-## 🎬 Demo Video
-
-A complete demonstration of the application features is available in the root directory:
-**File:** `demo.mp4`
 
 
 ## 👨‍💻 Author
